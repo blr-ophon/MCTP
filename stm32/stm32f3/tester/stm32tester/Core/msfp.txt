@@ -1,0 +1,83 @@
+
+FRAME
+*------------*----------*-----*
+| HEADER (8) | DATA (x) | EOM |
+*------------*----------*-----*
+
+>HEADER section
+*-------------*--------------*-------------*
+| PKT_TYPE(1) | DATA_SIZE(2) | RESERVED(5) |
+*-------------*--------------*-------------*
+
+>DATA section
+*--------------*---------------*-------------------*------------------*--------------*-----*
+| SEQUENCE (1) | CHANNEL_ID(1) | SAMPLES_1_SIZE(2) | DATA_FORMAT_1(1) | SAMPLES_1(x) | ... |
+*--------------*---------------*-------------------*------------------*--------------*-----*
+
+>DATA (SYNC RESP)
+*------------------*
+| N_OF_CHANNELS(1) |
+*------------------*
+
+>EOM
+*------------*
+|0x242526 (3)|
+*------------*
+TODO: change to End of grame
+
+
+TODO:
+    - Import file. Loads all channels into data 
+    - Custom frame rate for animations. text box and mouse scroll. Dynamically set frame interval.
+    - Put a lock on data_registry to avoid race conditions. CommTask is writing to dataChannels at the 
+        same time ChartGUI's are reading from it.
+    - Assure all errors on class that raises erros are checked in other classes using them
+    - Adjustable y-axis limit
+    - stop response timeout on controller in case it misses performer timeout
+    - Adjustable time for data save
+    - Filter for graphs
+    - Limit number of samples per channel. Let user choose between 0 and limit. Should be a pop-up menu where user can
+        configure before operation. This assures channel independency.
+
+    O Charts types to add: Area plot. Scatter plot.
+    0 Handle all possible errors in parsing
+
+    X check time reference in data stream, assure it is initialized at the start and clear at the end
+        (it appears after stopping some data still come and crashes the program if time reference is set
+         to none. The program is behaving correctly because at every start it sets a new time ref but is
+         prone to issues if something changes or features are added)
+    X Check if progressive worse performance is due to excessive UART rx.
+        (*) It is not. 
+    X PRIORITY 1: Don't draw anything on window via other thread, always use the main thread.
+    X Channel 5 glitches are likely due to the packet being corrupted near the end but still being appended
+        to channels and plotted. Check if it only happens when bad packets are received.
+        it is not
+    X Check if something is trying to set commtask state and being blocked by waiting for lock.
+    X There is no need to plot every time data arrives. Plotting is for user to see. Plot every 30ms
+    X Using oscilloscope type graphs greatly improve performance. User chooses period and only the data during
+        that period is plotted.
+    X Fix disconnect saving data 2 times
+    X Frame sizes and placements in a separate file, make widgets dependent on frames
+    X Use numpy arrays 
+    X Message channel / widget. The message box print the channel id and the message it brought.
+
+    MCU:
+    - Change EOM to EOM delimiter in documentation and code.
+    - Fix SendAll Buffer Size.
+    - Let User handle How it sends the data (poll, dma, it), only provide functions for serialization
+    - Let sendAll and sendAll_IT. If user wants to use DMA, let him serialize and send himself.
+    - Keep newlib dependency minimum (just memcpy and memset)
+        - Use your own memcpy and memset
+    - Use interrupts on sendAll and set TxCallback to signal end of data transmission to user
+    - float16 support
+    - 3 buttons: Start, Stop and Continue
+        Continue is enabled if Stop from user was received. Plot must be filled with zeroes for the stopped time
+    0 fix wasted memory on MAX_DATA_SIZE. Need malloc to optimize memory management, (problem due to heap size
+        being small). Let it be user defined on hmsfp. Malloc will make it harder to port to smaller MCUs
+
+
+Known Issues:
+    - Commtask get's slower the more plottings there are. This is due to concurrent access to data_registry. The
+        more lines plotted, the more readings from registry. This is due to threads in python not working in parallel.
+    - First frame always has incorrect timings due to the delay between starting transfer and the first frame received.
+        Sending the RDY packet immediatly before sending data solves this.

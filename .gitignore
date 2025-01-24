@@ -1,0 +1,4 @@
+*.orig
+*.plist
+build
+.cache

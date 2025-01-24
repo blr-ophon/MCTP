@@ -1,0 +1,113 @@
+To create a **User Manual** menu in your Doxygen-generated HTML documentation, you can use the `@page` directive or the `@addtogroup` directive to define custom content that will appear as a separate section in the navigation.
+
+---
+
+### **Steps to Add a "User Manual" Menu**
+
+#### **1. Create a Dedicated User Manual Page**
+You can create a new `.dox` file, for example, `user_manual.dox`, where you define the content of the User Manual.
+
+##### Example: `user_manual.dox`
+```text
+/**
+ * @page user_manual User Manual
+ *
+ * # User Manual
+ *
+ * Welcome to the User Manual for the Multi-Channel Transfer Protocol (MCTP).
+ *
+ * ## Table of Contents
+ * - [Overview](#overview)
+ * - [Getting Started](#getting-started)
+ * - [Protocol Details](#protocol-details)
+ * - [Examples](#examples)
+ *
+ * ## Overview
+ * MCTP is a protocol designed for...
+ *
+ * ## Getting Started
+ * 1. Initialize the UART peripheral.
+ * 2. Configure the MCTP handle.
+ * 3. Call `MCTP_Init()` to begin communication.
+ *
+ * ## Protocol Details
+ * - Frames are encapsulated with headers...
+ * - Each channel is identified by a unique ID.
+ *
+ * ## Examples
+ * Here is a basic example:
+ * @code
+ * MCTP_Handle hmsfp;
+ * hmsfp.huart = &huart2;
+ * hmsfp.totalChannels = 8;
+ * MCTP_Init(&hmsfp);
+ * @endcode
+ */
+```
+
+---
+
+#### **2. Configure the `Doxyfile`**
+Ensure your `Doxyfile` is set up to include the new `user_manual.dox` file and group it in the navigation:
+
+1. **Include the file in the input paths:**
+   ```text
+   INPUT = user_manual.dox src/ include/
+   ```
+
+2. **Enable grouping and pages:**
+   ```text
+   ENABLED_SECTIONS = yes
+   GENERATE_TREEVIEW = yes
+   ```
+
+3. **Optional: Add a custom `HTML_EXTRA_FILES` entry if you want static resources like images.**
+   ```text
+   IMAGE_PATH = images/
+   ```
+
+---
+
+#### **3. Add Cross-References**
+Link the User Manual to other documentation parts (e.g., files or data structures):
+- Use `@ref` to link to other sections or pages.
+- Example: `[Function Reference](files.html)`.
+
+---
+
+#### **4. Regenerate the Documentation**
+Run Doxygen to regenerate the HTML documentation:
+```bash
+doxygen Doxyfile
+```
+
+You should now see a **User Manual** section in the menu alongside **Files** and **Data Structures**.
+
+---
+
+### **Alternative: Use Groups for Nested Content**
+If your user manual has multiple subtopics, you can organize it into a group.
+
+#### Example Using `@defgroup`:
+```text
+/**
+ * @defgroup user_manual User Manual
+ * @{
+ *
+ * # User Manual
+ *
+ * ## Getting Started
+ * Steps to get started...
+ *
+ * ## Protocol Details
+ * Frames and channels...
+ *
+ * @}
+ */
+```
+
+This will group the content under a single **User Manual** menu in the navigation.
+
+---
+
+Would you like help refining the content or adding advanced features like collapsible sections or external links?

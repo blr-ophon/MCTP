@@ -1,0 +1,13 @@
+
+User takes sensor data then uses MSFP informing format, sample rate,
+number of samples
+
+Hierarchy
+
+    api
+        channels (send data)
+            Handle
+
+        task     (send and receive comm packets)
+            Handle
+            parser
