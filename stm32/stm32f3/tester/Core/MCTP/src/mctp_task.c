@@ -150,7 +150,7 @@ int FrameRecvHandler(MCTP_Handle *hmctp){
                 if(MCTP_Serialize(hmctp, FRAMETYPE_DROP, drop_frame, MIN_FRAME_SIZE, NULL) < 0){
                     break;
                 }
-                HAL_UART_Transmit(hmctp->huart, drop_frame, MIN_FRAME_SIZE, HAL_MAX_DELAY);
+                HAL_UART_Transmit_IT(hmctp->huart, drop_frame, MIN_FRAME_SIZE);
             }
             break;
 
@@ -168,7 +168,7 @@ int FrameRecvHandler(MCTP_Handle *hmctp){
                 if(MCTP_Serialize(hmctp, FRAMETYPE_DROP, drop_frame, MIN_FRAME_SIZE, NULL) < 0){
                     break;
                 }
-                HAL_UART_Transmit(hmctp->huart, drop_frame, MIN_FRAME_SIZE, HAL_MAX_DELAY);
+                HAL_UART_Transmit_IT(hmctp->huart, drop_frame, MIN_FRAME_SIZE);
             }
 
             break;
@@ -188,7 +188,7 @@ int FrameRecvHandler(MCTP_Handle *hmctp){
                 if(MCTP_Serialize(hmctp, FRAMETYPE_DROP, drop_frame, MIN_FRAME_SIZE, NULL) < 0){
                     break;
                 }
-                HAL_UART_Transmit(hmctp->huart, drop_frame, MIN_FRAME_SIZE, HAL_MAX_DELAY);
+                HAL_UART_Transmit_IT(hmctp->huart, drop_frame, MIN_FRAME_SIZE);
             }
 
             /* 
@@ -200,13 +200,7 @@ int FrameRecvHandler(MCTP_Handle *hmctp){
         case STATE_TRANS:
             /* Allow data until stop is called */
 
-            if(frame.type == FRAMETYPE_STOP){     
-                /* Controller-triggered stop */
-
-                /* Signal stop request from controller. Wait for user halt */
-                hmctp->UserNotifyCallback(NOTIFY_STOP);
-            
-            }else if(frame.type == FRAMETYPE_DROP){
+            if(frame.type == FRAMETYPE_DROP){
                 hmctp->UserNotifyCallback(NOTIFY_STOP);
                 hmctp->state = STATE_IDLE;
 
@@ -214,7 +208,13 @@ int FrameRecvHandler(MCTP_Handle *hmctp){
                 if(MCTP_Serialize(hmctp, FRAMETYPE_DROP, drop_frame, MIN_FRAME_SIZE, NULL) < 0){
                     break;
                 }
-                HAL_UART_Transmit(hmctp->huart, drop_frame, MIN_FRAME_SIZE, HAL_MAX_DELAY);
+                HAL_UART_Transmit_IT(hmctp->huart, drop_frame, MIN_FRAME_SIZE);
+
+            }else if(frame.type == FRAMETYPE_STOP){     
+                /* Controller-triggered stop */
+
+                /* Signal stop request from controller. Wait for user halt */
+                hmctp->UserNotifyCallback(NOTIFY_STOP);
             }
             break;
     }
