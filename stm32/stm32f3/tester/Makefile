@@ -61,9 +61,8 @@ Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_exti.c \
 Core/Src/system_stm32f3xx.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
-Core/Src/retarget.c \
 Core/Src/fgen.c \
-Core/Src/adc_data.c \
+Core/Src/adc_data_sim.c \
 Core/MCTP/src/mctp_api.c \
 Core/MCTP/src/mctp_parser.c \
 Core/MCTP/src/mctp_task.c \

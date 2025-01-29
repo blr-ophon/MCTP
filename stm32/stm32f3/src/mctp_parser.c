@@ -6,7 +6,7 @@
  * 
  * >HEADER section
  * *-------------*--------------*-------------*
- * | PKT_TYPE(1) | DATA_SIZE(2) | RESERVED(5) |
+ * | FRM_TYPE(1) | DATA_SIZE(2) | RESERVED(5) |
  * *-------------*--------------*-------------*
  * 
  * >DATA section (DATA frame)
@@ -16,6 +16,7 @@
  * *-----*---------------*-----------------*----------------*------------*-----*
  * | ... | CHANNEL_ID(1) | SAMPLES_SIZE(2) | DATA_FORMAT(1) | SAMPLES(x) | ... |
  * *-----*---------------*-----------------*----------------*------------*-----*
+ * (*) TODO: SEQUENCE bits currently not implemented
  * 
  * >DATA section (SYNC RESP frame)
  * *------------------*
@@ -26,9 +27,7 @@
  * *------------*
  * |0x242526 (3)|
  * *------------*
- * TODO: change to End frame delimiter
  */
-
 
 
 #include "mctp_parser.h"

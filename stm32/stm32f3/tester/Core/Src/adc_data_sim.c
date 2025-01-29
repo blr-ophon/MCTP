@@ -1,4 +1,4 @@
-#include "adc_data.h"
+#include "adc_data_sim.h"
 
 static float wav0_samples[100] = {0};
 static float wav1_samples[100] = {0};
@@ -26,12 +26,12 @@ bool sending = false;
 /*
  * NOTE: This function blocks MCTP communication task
  */
-void mctp_user_callback(E_MCTP_Notification notif){
-    switch(notif){
-        case NOTIFY_STOP:
+void mctp_sig_callback(E_MCTP_Signal sig){
+    switch(sig){
+        case SIGNAL_STOP:
             sending = false;
             break;
-        case NOTIFY_START:
+        case SIGNAL_START:
             sending = true;
             break;
         default:
@@ -105,7 +105,7 @@ void ADCdata_test_send(MCTP_Handle *hmctp){
 
         /* STOP request during delay */
         if(!sending){
-            MCTP_Notify(hmctp, NOTIFY_HALT);
+            MCTP_Notify(hmctp, SIGNAL_HALT);
         }
     }
 }
@@ -134,7 +134,7 @@ void oldADCdata_test_send(MCTP_Handle *hmctp){
         HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
     }
 
-    MCTP_Notify(hmctp, NOTIFY_HALT);
+    MCTP_Notify(hmctp, SIGNAL_HALT);
 
     while(!sending){
 

@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
-#include "mctp_api.h"
+#include "mctp.h"
 
 typedef enum{
     FRAMETYPE_NONE        = 0,

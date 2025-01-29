@@ -117,7 +117,6 @@ static int NotifyHandler(MCTP_Handle *hmctp){
         /* TODO: send RDY frame */
     }
 
-exit:
     /* TODO: Chech transmit errors */
     return status;
 }
@@ -179,7 +178,7 @@ int FrameRecvHandler(MCTP_Handle *hmctp){
             if(frame.type == FRAMETYPE_REQUEST){
                 hmctp->state = STATE_TRANS;
                 /* Notify user of start request */
-                hmctp->UserNotifyCallback(NOTIFY_START);
+                hmctp->SignalCallback(SIGNAL_START);
 
             }else if(frame.type == FRAMETYPE_DROP){
                 hmctp->state = STATE_IDLE;
@@ -201,7 +200,7 @@ int FrameRecvHandler(MCTP_Handle *hmctp){
             /* Allow data until stop is called */
 
             if(frame.type == FRAMETYPE_DROP){
-                hmctp->UserNotifyCallback(NOTIFY_STOP);
+                hmctp->SignalCallback(SIGNAL_STOP);
                 hmctp->state = STATE_IDLE;
 
                 uint8_t drop_frame[MIN_FRAME_SIZE];
@@ -214,7 +213,7 @@ int FrameRecvHandler(MCTP_Handle *hmctp){
                 /* Controller-triggered stop */
 
                 /* Signal stop request from controller. Wait for user halt */
-                hmctp->UserNotifyCallback(NOTIFY_STOP);
+                hmctp->SignalCallback(SIGNAL_STOP);
             }
             break;
     }

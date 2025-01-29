@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cp -rf ./src ./include ./tester/stm32tester/Core/MCTP/
+cp -rf ./src ./include ./tester/Core/MCTP/

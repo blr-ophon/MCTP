@@ -17,7 +17,6 @@
  */
 
 #include "mctp_api.h"
-#include "mctp_task.h"
 
 MCTP_Handle *g_Hmctp;
 
@@ -91,12 +90,12 @@ void MCTP_Stop(MCTP_Handle *hmctp){
  * @param notif the notification code.
  * @return None
  */
-void MCTP_Notify(MCTP_Handle *hmctp, E_MCTP_Notification notif){
+void MCTP_Notify(MCTP_Handle *hmctp, E_MCTP_Signal notif){
     switch(notif){
-        case NOTIFY_READY:
+        case SIGNAL_READY:
             hmctp->userReady = true;
             break;
-        case NOTIFY_HALT:
+        case SIGNAL_HALT:
             if(hmctp->state == STATE_TRANS){
                 hmctp->userHalt = true;
             }
@@ -235,4 +234,4 @@ int MCTP_SendAll(MCTP_Handle *hmctp){
 exit:
     return status;
 }
-/* TODO: Interrupt mode. Notify application via txCpltCallback */
+/* TODO: SendAll with interrupts. Notify application via txCpltCallback */

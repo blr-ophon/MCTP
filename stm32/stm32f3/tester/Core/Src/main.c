@@ -97,7 +97,7 @@ int main(void)
 
     MCTP_Handle hmctp;
     hmctp.huart = &huart2;
-    hmctp.UserNotifyCallback = mctp_user_callback;
+    hmctp.SignalCallback = mctp_sig_callback;
     hmctp.totalChannels = 8;
 
     MCTP_Init(&hmctp);

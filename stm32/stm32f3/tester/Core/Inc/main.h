@@ -35,8 +35,7 @@ extern "C" {
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "retarget.h"
-#include "adc_data.h"
+#include "adc_data_sim.h"
 #include "mctp_api.h"
 
 /* USER CODE END Includes */
